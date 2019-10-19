@@ -1,6 +1,6 @@
 [package]
 name = "vmaf-sys"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["colbyn <hello@colbyn.com>"]
 edition = "2018"
 description = "Rust VMAF FFI"
@@ -15,5 +15,12 @@ tar = "0.4.26"
 flate2 = "1.0.12"
 bindgen = "0.50"
 
+# [features]
+# docs-only = []
+
+# [package.metadata.docs.rs]
+# features = ["docs-only"]
+
 [package.metadata.docs.rs]
-features = ["docs-only"]
+rustc-args = ["--cfg",  "vmaf_sys_docs_rs"]
+rustdoc-args = ["--cfg", "vmaf_sys_docs_rs"]

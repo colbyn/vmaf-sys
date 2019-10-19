@@ -10,6 +10,7 @@ include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 // EXTRAS (FROM LIBVMAF SOURCE CODE)
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Extra stuff from the libvmaf git repo that you’ll probably need.
 pub mod extras {
     const buildtype_docs_only_stub_msg: &'static str =
         "stub for docs.rs only (when cargo feature = 'buildtype-docs-only')";

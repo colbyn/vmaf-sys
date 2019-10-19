@@ -140,6 +140,7 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
     })
 }
 
+#[cfg(not(feature = "docs-only"))]
 fn main() {
     let out_path = PathBuf::from(std::env::var("OUT_DIR").unwrap());
 
@@ -174,6 +175,18 @@ fn main() {
                 .to_str()
                 .expect("vmaf_files.header_file.to_str() failed")
         })
+        .generate()
+        .expect("Unable to generate bindings")
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("Couldn't write bindings!");
+}
+
+
+#[cfg(feature = "docs-only")]
+fn main() {
+    // BUILD RUST FFI CODE
+    bindgen::Builder::default()
+        .header("include/libvmaf.h")
         .generate()
         .expect("Unable to generate bindings")
         .write_to_file(out_path.join("bindings.rs"))

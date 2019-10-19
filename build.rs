@@ -140,8 +140,11 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
     })
 }
 
-#[cfg(not(feature = "docs-only"))]
-fn main() {
+///////////////////////////////////////////////////////////////////////////////
+// ENTRYPOINT
+///////////////////////////////////////////////////////////////////////////////
+
+fn build_all() {
     let out_path = PathBuf::from(std::env::var("OUT_DIR").unwrap());
 
     // LINK C++ (VMAF REQUIREMENT)
@@ -181,9 +184,8 @@ fn main() {
         .expect("Couldn't write bindings!");
 }
 
-
-#[cfg(feature = "docs-only")]
-fn main() {
+fn build_docs_only() {
+    let out_path = PathBuf::from(std::env::var("OUT_DIR").unwrap());
     // BUILD RUST FFI CODE
     bindgen::Builder::default()
         .header("include/libvmaf.h")
@@ -193,4 +195,14 @@ fn main() {
         .expect("Couldn't write bindings!");
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// MAIN
+///////////////////////////////////////////////////////////////////////////////
 
+fn main() {
+    #[cfg(feature="buildtype-docs-only")]
+    build_docs_only();
+
+    #[cfg(not(feature="buildtype-docs-only"))]
+    build_all();
+}

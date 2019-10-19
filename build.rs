@@ -140,8 +140,7 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
     })
 }
 
-// #[cfg(not(feature = "docs-only"))]
-#[cfg(not(vmaf_sys_docs_rs))]
+#[cfg(not(feature = "docs-only"))]
 fn main() {
     let out_path = PathBuf::from(std::env::var("OUT_DIR").unwrap());
 
@@ -183,8 +182,7 @@ fn main() {
 }
 
 
-// #[cfg(feature = "docs-only")]
-#[cfg(vmaf_sys_docs_rs)]
+#[cfg(feature = "docs-only")]
 fn main() {
     // BUILD RUST FFI CODE
     bindgen::Builder::default()

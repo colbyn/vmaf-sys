@@ -34,12 +34,16 @@ fn run_make(source_path: &PathBuf) {
         .expect(&format!("make -C {:?} failed", source_path));
 }
 
+struct VmafModel {
+    main: PathBuf,
+    model: PathBuf,
+}
 
 struct VmafFiles {
     release_dir: PathBuf,
     lib_file: PathBuf,
-    model_def: PathBuf,
-    model_4k: PathBuf,
+    model_def: VmafModel,
+    model_4k: VmafModel,
     header_file: PathBuf,
 }
 
@@ -51,7 +55,9 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
     // OUTPUT (RELEASE) FILES
     let lib_file = release_dir.join("libvmaf.a");
     let model_def = release_dir.join("vmaf_v0.6.1.pkl");
+    let model_def_other = release_dir.join("vmaf_v0.6.1.pkl.model");
     let model_4k = release_dir.join("vmaf_4k_v0.6.1.pkl");
+    let model_4k_other = release_dir.join("vmaf_4k_v0.6.1.pkl.model");
     let header_file = release_dir.join("libvmaf.h");
     // CHECKS
     if is_debug_mode() {
@@ -59,14 +65,22 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
         // builds the project. Unless in release mode.
         let all_exists = lib_file.exists()
             && model_def.exists()
+            && model_def_other.exists()
             && model_4k.exists()
+            && model_4k_other.exists()
             && header_file.exists();
         if all_exists {
             return Ok(VmafFiles {
                 release_dir: release_dir.clone(),
                 lib_file,
-                model_def,
-                model_4k,
+                model_def: VmafModel {
+                    main: model_def,
+                    model: model_def_other,
+                },
+                model_4k: VmafModel {
+                    main: model_4k,
+                    model: model_4k_other,
+                },
                 header_file,
             });
         }
@@ -126,7 +140,9 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
     cpy(source_dir.join("src/libvmaf/src/libvmaf.h"), &header_file);
     cpy(source_dir.join("src/libvmaf/libvmaf.a"), &lib_file);
     cpy(source_dir.join("model/vmaf_v0.6.1.pkl"), &model_def);
+    cpy(source_dir.join("model/vmaf_v0.6.1.pkl.model"), &model_def_other);
     cpy(source_dir.join("model/vmaf_4k_v0.6.1.pkl"), &model_4k);
+    cpy(source_dir.join("model/vmaf_4k_v0.6.1.pkl.model"), &model_4k_other);
     // CLEANUP
     std::fs::remove_dir_all(&download_dir).map_err(|x| x.to_string())?;
     std::fs::remove_dir_all(&source_dir).map_err(|x| x.to_string())?;
@@ -134,8 +150,14 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
     Ok(VmafFiles{
         release_dir: release_dir.clone(),
         lib_file,
-        model_def,
-        model_4k,
+        model_def: VmafModel {
+            main: model_def,
+            model: model_def_other,
+        },
+        model_4k: VmafModel {
+            main: model_4k,
+            model: model_4k_other,
+        },
         header_file,
     })
 }

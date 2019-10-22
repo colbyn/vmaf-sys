@@ -99,7 +99,7 @@ lazy_static! {
         let mut model_other = PathBuf::from(root_dir.path())
             .join("vmaf_v0.6.1.pkl.model");
         // FILL FILES
-        let (pkg, other) = get_vmaf_4k_model();
+        let (pkg, other) = get_vmaf_def_model();
         std::fs::write(&model_pkg, pkg).expect("TmpVmafModelFile::new_tmp");
         std::fs::write(&model_other, other).expect("TmpVmafModelFile::new_tmp");
         // DONE

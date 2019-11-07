@@ -90,7 +90,7 @@ fn download_and_build_vmaf() -> Result<VmafFiles, String> {
     // SETUP
     std::fs::create_dir_all(&download_dir).map_err(|x| x.to_string())?;
     // DOWNLOAD
-    let url = "https://github.com/Netflix/vmaf/tarball/master";
+    let url = "https://github.com/colbyn/vmaf/tarball/vmaf-sys--0.0.10";
     let tar_reply = reqwest::get(url).expect("unable to get vmaf tar file from github");
     let tar = GzDecoder::new(tar_reply);
     let mut archive = Archive::new(tar);
